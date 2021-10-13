@@ -2,12 +2,17 @@ import React from "react";
 import SearchBar from "./SearchBar";
 import youtube from "../apis/youtube";
 import VideoList from "./VideoList";
+import SelectedVideo from "./SelectedVideo";
 
 export default class App extends React.Component{
 
     state={
         selectedVideo:null,
         videos:[]
+    }
+
+    componentDidMount(){
+        this.onSubmit('Pavel mavrin');
     }
 
     onVideoSelect=(video)=>{
@@ -20,15 +25,24 @@ export default class App extends React.Component{
                 q:searchTerm
             }
         })
-        this.setState({videos:data.data.items});
+        this.setState({videos:data.data.items,selectedVideo:data.data.items[0]});
     }
 
     render(){
-        console.log(this.state.selectedVideo);
         return (
             <div className="ui container">
                 <SearchBar onFormSubmit={this.onSubmit}/>
-                <VideoList onVideoSelect={this.onVideoSelect} videos={this.state.videos} />
+                <div className="ui grid">
+                    <div className="ui row">
+                        <div className="eleven wide column">
+                            <SelectedVideo video={this.state.selectedVideo}/>
+                        </div>
+                        <div className="five wide column">
+                            <VideoList onVideoSelect={this.onVideoSelect} videos={this.state.videos} />
+                        </div>
+                    </div>
+                </div>
+                
             </div>
         );
     }
